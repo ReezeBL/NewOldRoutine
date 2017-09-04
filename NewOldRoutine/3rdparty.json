@@ -1,0 +1,20 @@
+{
+  "AssemblyName": "NewOldRoutine",
+  "FileList": [
+    "GeneralSettings.cs",
+    "Gui.xaml.cs",
+    "NewOldRoutine.cs",
+    "Gui.xaml",
+    "Gui.baml",
+    "Gui.g.cs",
+    "VisualHelper.cs",
+    "DataModels\\SkillEntry.cs",
+    "DataModels\\SkillLogicEntry.cs",
+    "SkillLogic\\ExampleLogicProvider.cs",
+    "SkillLogic\\SkillLogicProvider.cs",
+    "SkillLogic\\MeeleSkillLogic.cs",
+    "SkillLogic\\RangedSkillLogic.cs"
+  ],
+  "Dependencies": [],
+  "References": []
+}

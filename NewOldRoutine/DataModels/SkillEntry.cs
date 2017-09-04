@@ -3,6 +3,9 @@ using Loki.Game.Objects;
 
 namespace NewOldRoutine.DataModels
 {
+    /// <summary>
+    /// View for in-game skill to display in UI
+    /// </summary>
     public class SkillEntry
     {
         public Skill Skill { get; }

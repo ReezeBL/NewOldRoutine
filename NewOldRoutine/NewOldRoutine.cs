@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using log4net;
 using Loki.Bot;
 using Loki.Common;
+using NewOldRoutine.DataModels;
 
 // ReSharper disable once CheckNamespace
 namespace NewOldRoutine
@@ -16,6 +16,7 @@ namespace NewOldRoutine
 
         private Gui gui;
         private SkillLogicProvider[] providers = Array.Empty<SkillLogicProvider>();
+        private Targeting targeting = new Targeting();
 
         public UserControl Control => gui ?? (gui = new Gui());
         public JsonSettings Settings => GeneralSettings.Instance;
@@ -58,6 +59,9 @@ namespace NewOldRoutine
                 .ToArray();
 
             GeneralSettings.Providers = providers;
+
+            GeneralSettings.ProviderWrappers.Clear();
+            providers.Select(provider => new SkillProviderView(provider)).ForEach(GeneralSettings.ProviderWrappers.Add);
         }
 
         public void Deinitialize()
@@ -70,9 +74,11 @@ namespace NewOldRoutine
             if (logic.Id != "hook_combat")
                 return LogicResult.Unprovided;
 
-            foreach (var provider in providers)
+            var orderedProviders = GeneralSettings.ProviderWrappers.Select(wrapper => wrapper.LogicProvider)
+                .Where(provider => provider.Enabled).ToArray();
+
+            foreach (var provider in orderedProviders)
             {
-                if (!provider.Enabled) continue;
                 if (await provider.PreCombatHandling())
                     return LogicResult.Provided;
             }

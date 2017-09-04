@@ -33,7 +33,7 @@ namespace NewOldRoutine
             }
         }
 
-        public SkillLogicEntry SelectedEntry
+        public SkillProviderView SelectedEntry
         {
             set
             {
@@ -42,18 +42,20 @@ namespace NewOldRoutine
             }
         }
 
-        public ObservableCollection<SkillLogicEntry> Entries { get; } = new ObservableCollection<SkillLogicEntry>();
+        public ObservableCollection<SkillProviderView> Entries => GeneralSettings.ProviderWrappers;
+
+        public int CombatRange => GeneralSettings.Instance.CombatRange;
 
         public Gui()
         {
             InitializeComponent();
-            this.SkillLogicProvidersDataGrid.ItemsSource = Entries;
+            SkillLogicProvidersDataGrid.ItemsSource = Entries;
         }
 
         public void SetProviders(IEnumerable<SkillLogicProvider> providers)
         {
             Entries.Clear();
-            providers.Select(provider => new SkillLogicEntry(provider)).ForEach(Entries.Add);
+            providers.Select(provider => new SkillProviderView(provider)).ForEach(Entries.Add);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -67,7 +69,10 @@ namespace NewOldRoutine
         private void RefreshProviders(object sender, RoutedEventArgs e)
         {
             if(LokiPoe.StateManager.IsInGameStateActive)
-                SetProviders(GeneralSettings.Providers);
+                foreach (var providerWrapper in GeneralSettings.ProviderWrappers)
+                {
+                    providerWrapper.UpdateSkillList();
+                }
         }
     }
 }
